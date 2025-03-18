@@ -32,8 +32,7 @@ const Users = () => {
 
     const deleteUser = async (id) => {
         try {
-            debugger
-            const res = await axios.delete('http://localhost:8888/api/users', { id })
+            const res = await axios.delete('http://localhost:8888/api/users/'+id)
             getAllUsers()
 
         } catch (e) {
@@ -56,7 +55,7 @@ const Users = () => {
                             </div>
                         </div>
                         <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deleteUser(user._id)}></Button>
+                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => {deleteUser(user._id)}}></Button>
                         </div>
                     </div>
                 </div>

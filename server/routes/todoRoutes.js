@@ -8,6 +8,6 @@ router.get("/:id",todoController.getTodoById)
 router.post("/",todoController.addNewTodo)
 router.put("/",todoController.UpdateTodo)
 router.put("/complete/:id",todoController.updateTodoComplete)
-router.delete("/",todoController.deleteTodo)
+router.delete("/:id",todoController.deleteTodo)
 
 module.exports = router

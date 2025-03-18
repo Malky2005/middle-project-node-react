@@ -51,7 +51,7 @@ const updatePhoto = async(req,res)=>{
 }
 
 const deletePhoto = async(req,res)=>{
-    const {id} = req.body
+    const {id} = req.params
     if(!id){
         return res.status(400).send('id is requried')
     }

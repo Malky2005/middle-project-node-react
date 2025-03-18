@@ -52,7 +52,7 @@ const updatePost = async(req,res)=>{
 }
 
 const deletePost = async(req,res)=>{
-    const {id} = req.body
+    const {id} = req.params
     if(!id){
         return res.status(400).send('id is requried')
     }

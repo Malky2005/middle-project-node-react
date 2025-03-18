@@ -7,6 +7,6 @@ router.get("/",photoController.getAllPhotos)
 router.get("/:id",photoController.getPhotoById)
 router.post("/",photoController.addNewPhoto)
 router.put("/",photoController.updatePhoto)
-router.delete("/",photoController.deletePhoto)
+router.delete("/:id",photoController.deletePhoto)
 
 module.exports = router

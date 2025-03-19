@@ -3,7 +3,7 @@ import { TabMenu } from 'primereact/tabmenu';
 //import { useRouter } from 'next/router';
 
 
-export default function RouterDemo() {
+export default function Router() {
     const items = [
         {
             label: 'Todos',

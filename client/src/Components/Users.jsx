@@ -5,15 +5,16 @@ import { BlockUI } from 'primereact/blockui';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
 import Adduser from './AddUser';
-import {BlockedUserContext} from './Contexts'
-
-
+import { BlockedUserContext, userContext } from './Contexts'
+import Updateuser from './Updateuser';
 
 const Users = () => {
     const [usersList, setUsersList] = useState([])
     const [layout, setLayout] = useState('grid')
     const [blocked, setBlocked] = useState(false)
-    
+    const [isCreating, setIsCreating] = useState(true);
+    const [CurrentUser, setCurrentUser] = useState({});
+
 
     useEffect(() => {
         getAllUsers()
@@ -29,10 +30,9 @@ const Users = () => {
         }
     }
 
-
     const deleteUser = async (id) => {
         try {
-            const res = await axios.delete('http://localhost:8888/api/users/'+id)
+            const res = await axios.delete('http://localhost:8888/api/users/' + id)
             getAllUsers()
 
         } catch (e) {
@@ -55,7 +55,7 @@ const Users = () => {
                             </div>
                         </div>
                         <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => {deleteUser(user._id)}}></Button>
+                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => { deleteUser(user._id) }}></Button>
                         </div>
                     </div>
                 </div>
@@ -76,8 +76,13 @@ const Users = () => {
                     <div className="flex flex-column align-items-center gap-3 py-5">
                         <div className="text-2xl font-bold">{user.name}</div>
                     </div>
-                    <div className="flex align-items-center justify-content-between">
-                        <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deleteUser(user._id)}></Button>
+                    <div className="flex align-items-end ">
+                        <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deleteUser(user._id)} style={{ marginRight: '0.5rem' }}></Button>
+                        <Button icon="pi pi-pen-to-square" className="p-button-rounded" onClick={() => {
+                            setBlocked(true)
+                            setIsCreating(false)
+                            setCurrentUser(user)
+                        }} style={{ marginRight: '0.5rem' }}></Button>
                     </div>
                 </div>
             </div>
@@ -94,20 +99,25 @@ const Users = () => {
     };
 
     const listTemplate = (users, layout) => {
-        return <div className="grid grid-nogutter">{users.map((user, index) => itemTemplate(user, layout, index))}</div>;
+        return <div className="grid grid-nogutter" style={{ width: '90%', margin: '0 auto' }}>{users.map((user, index) => itemTemplate(user, layout, index))}</div>;
     };
 
     const header = () => {
         return (
-            <div>
-                <span className="flex justify-content-end">
-                    <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
-                </span>
-                <span className="flex justify-content-start">
-                    <Button icon='pi pi-user-plus' onClick={() => { setBlocked(!blocked) }}></Button>
-                </span>
-
-            </div>
+            <>
+                <h2>Users</h2>
+                <div className="flex" style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                    <span>
+                        <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
+                    </span>
+                    <span>
+                        <Button icon='pi pi-user-plus' onClick={() => {
+                            setBlocked(!blocked)
+                            setIsCreating(true)
+                        }}></Button>
+                    </span>
+                </div>
+            </>
         );
     };
 
@@ -116,7 +126,10 @@ const Users = () => {
     return (
         <BlockUI blocked={blocked} template={
             <BlockedUserContext.Provider value={setBlocked}>
-                <Adduser />
+                {isCreating ? <Adduser /> : 
+                <userContext.Provider value={CurrentUser}>
+                <Updateuser />
+                </userContext.Provider>}
             </BlockedUserContext.Provider>}>
             <div className="card">
                 <DataView value={usersList} listTemplate={listTemplate} layout={layout} header={header()} />

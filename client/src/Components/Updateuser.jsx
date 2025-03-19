@@ -1,52 +1,32 @@
-
 import { Card } from 'primereact/card';
-import React, { useContext, useRef, useEffect, useState } from 'react';
-import axios from 'axios'
-import { BlockedUserContext } from "./Contexts";
+import React, { useContext, useState } from 'react';
+import axios from 'axios';
+import { BlockedUserContext, userContext } from "./Contexts";
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import { Password } from 'primereact/password';
-import { Checkbox } from 'primereact/checkbox';
-import { Dialog } from 'primereact/dialog';
-import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
-import { useMountEffect } from 'primereact/hooks';
-import { Messages } from 'primereact/messages';
-import { InputNumber } from 'primereact/inputnumber';
+import { Dialog } from 'primereact/dialog';
 
-
-
-const Adduser = () => {
-    const setBlocked = useContext(BlockedUserContext)
+const Updateuser = () => {
+    const setBlocked = useContext(BlockedUserContext);
     const [showMessage, setShowMessage] = useState(false);
-    const defaultValues = {
-        name: '',
-        username: '',
-        email: '',
-        phone: '',
-        street:'',
-        city:'',
-        building:0
-
-    }
-    const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
+    const CurrentUser = useContext(userContext)
+    debugger
+    const { control, formState: { errors }, handleSubmit, reset } = useForm({ CurrentUser });
     const onSubmit = async (data) => {
-        
-        
         try {
-            const res = await axios.post('http://localhost:8888/api/users', data)
+            const res = await axios.post('http://localhost:8888/api/users', data);
+
             setShowMessage(true)
 
         } catch (e) {
-            console.error(e)
+            console.error(e);
         }
         reset();
     };
     const getFormErrorMessage = (name) => {
-        return errors[name] && <small className="p-error">{errors[name].message}</small>
+        return errors[name] && <small className="p-error">{errors[name].message}</small>;
     };
 
     const dialogFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => {
@@ -55,16 +35,16 @@ const Adduser = () => {
     }} /></div>;
     return (
         <>
-        <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
+            <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
                 <div className="flex justify-content-center flex-column pt-6 px-3">
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
                     <h5>Registration Successful!</h5>
                 </div>
             </Dialog>
-            <Card title="New user">
+            <Card title="Update user">
                 <div className="form-demo">
                     <div className="flex justify-content-center">
-                        <div className="card" >
+                        <div className="card">
                             <form onSubmit={handleSubmit(onSubmit)} className="p-fluid">
                                 <div className="field">
                                     <span className="p-float-label">
@@ -85,13 +65,14 @@ const Adduser = () => {
                                     {getFormErrorMessage('username')}
                                 </div>
                                 <div className="field">
-                                    <span className="p-float-label p-input-icon-right">
+                                    <span className="p-float-label p-input-icon-end">
                                         <i className="pi pi-envelope" />
                                         <Controller name="email" control={control}
                                             rules={{ pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Invalid email address. E.g. example@email.com' } }}
                                             render={({ field, fieldState }) => (
                                                 <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
                                             )} />
+
                                         <label htmlFor="email" className={classNames({ 'p-error': !!errors.email })}>Email</label>
                                     </span>
                                     {getFormErrorMessage('email')}
@@ -99,7 +80,7 @@ const Adduser = () => {
                                 <div className="field">
                                     <span className="p-float-label">
                                         <Controller name="phone" control={control}
-                                            rules={{ pattern: { value: /^\d{9,10}$/, message: 'Invalid phone number. It must be 9 or 10 digits long and contain only numbers.' }}}
+                                            rules={{ pattern: { value: /^\d{9,10}$/, message: 'Invalid phone number. It must be 9 or 10 digits long and contain only numbers.' } }}
                                             render={({ field, fieldState }) => (
                                                 <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
                                             )} />
@@ -130,13 +111,13 @@ const Adduser = () => {
                                 <div className="field">
                                     <span className="p-float-label">
                                         <Controller name="building" control={control}
-                                        rules={{ 
-                                            pattern: { 
-                                                value: /^[0-9]+$/, // Regex to ensure only numbers
-                                                message: 'Invalid building number. It must consist of only numbers.' 
-                                            }
-                                        }}
-                                        render={({ field, fieldState }) => (
+                                            rules={{
+                                                pattern: {
+                                                    value: /^[0-9]+$/, // Regex to ensure only numbers
+                                                    message: 'Invalid building number. It must consist of only numbers.'
+                                                }
+                                            }}
+                                            render={({ field, fieldState }) => (
                                                 <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
                                             )} />
                                         <label htmlFor="building" className={classNames({ 'p-error': errors.building })}>building number</label>
@@ -155,6 +136,5 @@ const Adduser = () => {
             </Card>
         </>
     );
-}
-
-export default Adduser
+};
+export default Updateuser;

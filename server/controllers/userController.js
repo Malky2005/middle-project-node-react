@@ -16,7 +16,7 @@ const getUserById = async (req,res)=>{
 }
 
 const addNewUser = async (req,res)=>{
-    const {name, username, email, address, phone} = req.body
+    const { name, username, email, phone, address: { street, city, building } } = req.body;
     if(!name || !username){
         return res.status(400).send('name and username are required')
     }
@@ -34,7 +34,7 @@ const addNewUser = async (req,res)=>{
 }
 
 const updateUser = async (req,res)=>{
-    const {_id,name, username, email, address, phone} = req.body
+    const { name, username, email, phone, address: { street, city, building } } = req.body;
     if(!_id || !name || !username){
         return res.status(400).send('fields are required')
     }

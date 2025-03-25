@@ -6,6 +6,11 @@ import { TabMenu } from 'primereact/tabmenu';
 export default function Router() {
     const items = [
         {
+            label: 'Home',
+            icon: 'pi pi-list-check',
+            url: '/home'
+        },
+        {
             label: 'Todos',
             icon: 'pi pi-list-check',
             url: '/todos'

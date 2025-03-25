@@ -10,7 +10,7 @@ import { Route, Routes } from 'react-router-dom'
 import Todos from './Components/Todos'
 import Posts from './Components/Posts'
 import Users from './Components/Users'
-
+import Home from './Components/Home'
 
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
     <div className="App">
       <Router></Router>
       <Routes>
+          <Route path='/home' element={<Home/>} />
           <Route path='/todos' element={<Todos/>} />
           <Route path='/posts' element={<Posts/>} />
           <Route path='/users' element={<Users/>} />

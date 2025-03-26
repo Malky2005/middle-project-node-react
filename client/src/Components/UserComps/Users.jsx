@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { BlockUI } from 'primereact/blockui';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
-import Adduser from './User/AddUser';
+import Adduser from './AddUser';
 import Updateuser from './Updateuser';
 
 const Users = () => {

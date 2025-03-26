@@ -2,7 +2,6 @@ const User = require('../models/User')
 
 const getAllUsers = async (req,res)=>{
     const allUsers = await User.find().lean()
-    allUsers.sort((a,b) => a._id - b._id)
     res.json(allUsers)
 }
 
@@ -16,7 +15,8 @@ const getUserById = async (req,res)=>{
 }
 
 const addNewUser = async (req,res)=>{
-    const { name, username, email, phone, address: { street, city, building } } = req.body;
+    const { name, username, email, phone, street, city, building } = req.body;
+    const address = {street,city,building:Number(building)}
     if(!name || !username){
         return res.status(400).send('name and username are required')
     }
@@ -34,7 +34,8 @@ const addNewUser = async (req,res)=>{
 }
 
 const updateUser = async (req,res)=>{
-    const { name, username, email, phone, address: { street, city, building } } = req.body;
+    const { _id,name, username, email, phone, street, city, building } = req.body;
+    const address = { street, city, building }
     if(!_id || !name || !username){
         return res.status(400).send('fields are required')
     }

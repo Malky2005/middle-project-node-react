@@ -1,14 +1,14 @@
 const Post = require('../models/Post')
 
 const getAllPosts = async(req,res)=>{
-    const allPosts = await Post.find().lean()
+    const allPosts = await Post.find().lean().sort({title:1})
     allPosts.sort((a,b) => a._id - b._id)
     res.json(allPosts)
 }
 
 const getPostById = async(req,res)=>{
     const {id} = req.params
-    const post = await Post.findById(id).lean()
+    const post = await Post.findById(_id).lean()
     if(!post){
         return res.status(400).send('no post found')
     }
@@ -41,7 +41,7 @@ const updatePost = async(req,res)=>{
     if(existPost && existPost._id!= _id){
         return res.status(409).send('title exists')
     }
-    const post = await Post.findById(id)
+    const post = await Post.findById(_id)
     if(!post){
         return res.status(400).send('no post found')
     }

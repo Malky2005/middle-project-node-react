@@ -1,7 +1,7 @@
 const Photo = require('../models/Photo')
 
 const getAllPhotos = async(req,res)=>{
-    const allPhotos = await Photo.find().lean()
+    const allPhotos = await Photo.find().lean().sort({_id:1})
     res.send(allPhotos)
 }
 

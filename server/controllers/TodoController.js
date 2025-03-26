@@ -1,7 +1,7 @@
 const Todo = require('../models/Todo')
 
 const getAllTodos = async (req,res) =>{
-    const allTodos = await Todo.find().lean()
+    const allTodos = await Todo.find().lean().sort({title:1})
     res.json(allTodos)
 }
 
@@ -19,7 +19,7 @@ const addNewTodo = async (req,res) =>{
     if(!title){
         return res.status(400).send('title is required')
     }
-    const existTodo = await User.findOne({title}).lean()
+    const existTodo = await Todo.findOne({title}).lean()
     if(existTodo){
         return res.status(409).send('title exists')
     }
@@ -36,7 +36,7 @@ const UpdateTodo = async (req,res) =>{
     if(!_id || !title){
         return res.status(400).send('fields are required')
     }
-    const existTodo = await User.findOne({title}).lean()
+    const existTodo = await Todo.findOne({title}).lean()
     if(existTodo && existTodo._id != _id){
         return res.status(409).send('title exists')
     }

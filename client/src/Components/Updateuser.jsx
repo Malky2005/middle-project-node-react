@@ -1,22 +1,33 @@
 import { Card } from 'primereact/card';
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BlockedUserContext, userContext } from "./Contexts";
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 
-const Updateuser = () => {
-    const setBlocked = useContext(BlockedUserContext);
+const Updateuser = (props) => {
+    const { setBlocked } = props
     const [showMessage, setShowMessage] = useState(false);
-    const CurrentUser = useContext(userContext)
-    debugger
-    const { control, formState: { errors }, handleSubmit, reset } = useForm({ CurrentUser });
+    const [showError, setShowError] = useState(false);
+
+    const { currentUser } = props
+    const defaultValues = {
+        name: currentUser.name,
+        username: currentUser.username,
+        email: currentUser.email,
+        phone: currentUser.phone,
+        street: currentUser.address ? currentUser.address.street : '',
+        city: currentUser.address ? currentUser.address.city : '',
+        building: currentUser.address ? currentUser.address.building : ''
+
+    }
+    const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues })
     const onSubmit = async (data) => {
         try {
-            const res = await axios.post('http://localhost:8888/api/users', data);
+            data._id = currentUser._id
+            const res = await axios.put('http://localhost:8888/api/users', data);
 
             setShowMessage(true)
 
@@ -33,12 +44,21 @@ const Updateuser = () => {
         setShowMessage(false)
         setBlocked(false)
     }} /></div>;
+    const dialogErrorFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => {
+        setShowError(false)
+    }} /></div>;
     return (
         <>
             <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
                 <div className="flex justify-content-center flex-column pt-6 px-3">
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-                    <h5>Registration Successful!</h5>
+                    <h5>Updated {currentUser.name} Successful!</h5>
+                </div>
+            </Dialog>
+            <Dialog visible={showError} onHide={() => setShowError(false)} position="top" footer={dialogErrorFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
+                <div className="flex justify-content-center flex-column pt-6 px-3">
+                    <i className="pi pi-exclamation-circle" style={{ fontSize: '5rem', color: 'var(--red-500)' }}></i>
+                    <h5>user name exists!!</h5>
                 </div>
             </Dialog>
             <Card title="Update user">
@@ -65,7 +85,7 @@ const Updateuser = () => {
                                     {getFormErrorMessage('username')}
                                 </div>
                                 <div className="field">
-                                    <span className="p-float-label p-input-icon-end">
+                                    <span className="p-float-label p-input-icon-right">
                                         <i className="pi pi-envelope" />
                                         <Controller name="email" control={control}
                                             rules={{ pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Invalid email address. E.g. example@email.com' } }}

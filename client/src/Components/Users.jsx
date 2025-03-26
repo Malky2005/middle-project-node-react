@@ -5,7 +5,6 @@ import { BlockUI } from 'primereact/blockui';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
 import Adduser from './AddUser';
-import { BlockedUserContext, userContext } from './Contexts'
 import Updateuser from './Updateuser';
 
 const Users = () => {
@@ -13,12 +12,15 @@ const Users = () => {
     const [layout, setLayout] = useState('grid')
     const [blocked, setBlocked] = useState(false)
     const [isCreating, setIsCreating] = useState(true);
-    const [CurrentUser, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState({});
 
 
     useEffect(() => {
         getAllUsers()
-    });
+    }, []);
+    useEffect(() => {
+        getAllUsers()
+    }, [blocked]);
 
     const getAllUsers = async () => {
         try {
@@ -46,16 +48,32 @@ const Users = () => {
                 <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
                     <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                         <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+                            <span className="text-gray-200 text-xs" >{user.updatedAt}</span>
                             <div className="text-2xl font-bold text-900">{user.name}</div>
                             <div className="flex align-items-center gap-3">
-                                <span className="flex align-items-center gap-2">
+
+                                <div className="flex align-items-center gap-2">
                                     <i className="pi pi-user"></i>
                                     <span className="font-semibold">{user.username}</span>
-                                </span>
+                                </div>
+                                {user.phone && <div className="flex align-items-center gap-2">
+                                    <i className="pi pi-phone"></i>
+                                    <span className="font-semibold">{user.phone}</span>
+                                </div>}
+                                {user.address &&
+                                    <div className="flex align-items-center gap-2">
+                                    <i className="pi pi-map-marker"></i>
+                                    <span className="font-semibold">{`${user.address?.street ?? ''} ${user.address?.building ?? ''} ${user.address?.city ?? ''}`}</span>
+                                </div>}
                             </div>
                         </div>
-                        <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => { deleteUser(user._id) }}></Button>
+                        <div className="flex sm:flex-rows align-items-center sm:align-items-end gap-3 sm:gap-2">
+                            <Button icon="pi pi-trash" raised rounded severity="danger" onClick={() => { deleteUser(user._id) }}></Button>
+                            <Button icon="pi pi-pen-to-square" raised rounded onClick={() => {
+                                setCurrentUser(user)
+                                setIsCreating(false)
+                                setBlocked(true)
+                            }} style={{ marginRight: '0.5rem' }}></Button>
                         </div>
                     </div>
                 </div>
@@ -67,21 +85,32 @@ const Users = () => {
         return (
             <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={user._id}>
                 <div className="p-4 border-1 surface-border surface-card border-round">
-                    <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-                        <div className="flex align-items-center gap-2">
-                            <i className="pi pi-user"></i>
-                            <span className="font-semibold">{user.username}</span>
+                    <div className="flex flex-wrap justify-content-between gap-2">
+                        <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+                            <span className="text-gray-200 text-xs" >{user.updatedAt}</span>
+                            <div className="flex align-items-center gap-2">
+                                <i className="pi pi-user"></i>
+                                <span className="font-semibold">{user.username}</span>
+                            </div>
+                            <div className="flex align-items-center gap-2">
+                                <i className="pi pi-phone"></i>
+                                <span className="font-semibold">{user.phone}</span>
+                            </div>
+                            <div className="flex align-items-center gap-2">
+                                <i className="pi pi-map-marker"></i>
+                                <span className="font-semibold">{`${user.address?.street ?? ''} ${user.address?.building ?? ''} ${user.address?.city ?? ''}`}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-column align-items-center gap-3 py-5">
                         <div className="text-2xl font-bold">{user.name}</div>
                     </div>
                     <div className="flex align-items-end ">
-                        <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deleteUser(user._id)} style={{ marginRight: '0.5rem' }}></Button>
-                        <Button icon="pi pi-pen-to-square" className="p-button-rounded" onClick={() => {
-                            setBlocked(true)
-                            setIsCreating(false)
+                        <Button icon="pi pi-trash" raised rounded severity="danger" onClick={() => deleteUser(user._id)} style={{ marginRight: '0.5rem' }}></Button>
+                        <Button icon="pi pi-pen-to-square" raised rounded onClick={() => {
                             setCurrentUser(user)
+                            setIsCreating(false)
+                            setBlocked(true)
                         }} style={{ marginRight: '0.5rem' }}></Button>
                     </div>
                 </div>
@@ -111,9 +140,9 @@ const Users = () => {
                         <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
                     </span>
                     <span>
-                        <Button icon='pi pi-user-plus' onClick={() => {
-                            setBlocked(!blocked)
+                        <Button icon='pi pi-user-plus' raised onClick={() => {
                             setIsCreating(true)
+                            setBlocked(!blocked)
                         }}></Button>
                     </span>
                 </div>
@@ -125,12 +154,10 @@ const Users = () => {
 
     return (
         <BlockUI blocked={blocked} template={
-            <BlockedUserContext.Provider value={setBlocked}>
-                {isCreating ? <Adduser /> : 
-                <userContext.Provider value={CurrentUser}>
-                <Updateuser />
-                </userContext.Provider>}
-            </BlockedUserContext.Provider>}>
+            <>
+                {isCreating ? <Adduser setBlocked={setBlocked}/> :
+                    <Updateuser currentUser={currentUser} setBlocked={setBlocked} />}
+            </>}>
             <div className="card">
                 <DataView value={usersList} listTemplate={listTemplate} layout={layout} header={header()} />
             </div>

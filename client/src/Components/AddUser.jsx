@@ -11,7 +11,7 @@ import { classNames } from 'primereact/utils';
 
 
 const Adduser = (props) => {
-    const {setBlocked} = props
+    const { setBlocked } = props
     const [showMessage, setShowMessage] = useState(false);
     const [showError, setShowError] = useState(false);
 
@@ -20,25 +20,24 @@ const Adduser = (props) => {
         username: '',
         email: '',
         phone: '',
-        street:'',
-        city:'',
-        building:null
+        street: '',
+        city: '',
+        building: null
 
     }
     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
     const onSubmit = async (data) => {
-        
-        
+
+
         try {
             const res = await axios.post('http://localhost:8888/api/users', data)
             setShowMessage(true)
 
         } catch (e) {
             console.error(e)
-            if(e.status == 409)
+            if (e.status == 409)
                 setShowError(true)
         }
-        reset();
     };
     const getFormErrorMessage = (name) => {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
@@ -53,10 +52,10 @@ const Adduser = (props) => {
     }} /></div>;
     return (
         <>
-        <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
+            <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
                 <div className="flex justify-content-center flex-column pt-6 px-3">
                     <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-                    <h5>Registration Successful!</h5>
+                    <h5>Add User Successful!</h5>
                 </div>
             </Dialog>
             <Dialog visible={showError} onHide={() => setShowError(false)} position="top" footer={dialogErrorFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
@@ -103,7 +102,7 @@ const Adduser = (props) => {
                                 <div className="field">
                                     <span className="p-float-label">
                                         <Controller name="phone" control={control}
-                                            rules={{ pattern: { value: /^\d{9,10}$/, message: 'Invalid phone number. It must be 9 or 10 digits long and contain only numbers.' }}}
+                                            rules={{ pattern: { value: /^\d{9,10}$/, message: 'Invalid phone number. It must be 9 or 10 digits long and contain only numbers.' } }}
                                             render={({ field, fieldState }) => (
                                                 <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
                                             )} />
@@ -134,13 +133,13 @@ const Adduser = (props) => {
                                 <div className="field">
                                     <span className="p-float-label">
                                         <Controller name="building" control={control}
-                                        rules={{ 
-                                            pattern: { 
-                                                value: /^[0-9]+$/, // Regex to ensure only numbers
-                                                message: 'Invalid building number. It must consist of only numbers.' 
-                                            }
-                                        }}
-                                        render={({ field, fieldState }) => (
+                                            rules={{
+                                                pattern: {
+                                                    value: /^[0-9]+$/, // Regex to ensure only numbers
+                                                    message: 'Invalid building number. It must consist of only numbers.'
+                                                }
+                                            }}
+                                            render={({ field, fieldState }) => (
                                                 <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
                                             )} />
                                         <label htmlFor="building" className={classNames({ 'p-error': errors.building })}>building number</label>

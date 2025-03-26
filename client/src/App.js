@@ -5,7 +5,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
-import Router from './Components/Menu';
+import Menu from './Components/Menu';
 import { Route, Routes } from 'react-router-dom'
 import Todos from './Components/Todos'
 import Posts from './Components/Posts'
@@ -16,9 +16,9 @@ import Home from './Components/Home'
 function App() {
   return (
     <div className="App">
-      <Router></Router>
+      <Menu></Menu>
       <Routes>
-          <Route path='/home' element={<Home/>} />
+          <Route path='/' element={<Home/>} />
           <Route path='/todos' element={<Todos/>} />
           <Route path='/posts' element={<Posts/>} />
           <Route path='/users' element={<Users/>} />

@@ -33,8 +33,9 @@ const Updateuser = (props) => {
 
         } catch (e) {
             console.error(e);
+            if (e.status == 409)
+                setShowError(true)
         }
-        reset();
     };
     const getFormErrorMessage = (name) => {
         return errors[name] && <small className="p-error">{errors[name].message}</small>;

@@ -5,7 +5,6 @@ import { BlockUI } from 'primereact/blockui';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
 import AddPost from './AddPost';
-import { BlockedUserContext, userContext } from './Contexts'
 import UpdatePost from './UpdatePost';
 
 const Posts = ()=>{
@@ -18,6 +17,9 @@ const Posts = ()=>{
     useEffect(() => {
         getAllPosts()
     },[]);
+    useEffect(() => {
+        getAllPosts()
+    }, [blocked]);
 
     const getAllPosts = async()=>{
         try{
@@ -27,6 +29,7 @@ const Posts = ()=>{
             console.error(e)
         }
     }
+    
 
     const deletePost = async (id) => {
         try {
@@ -44,17 +47,17 @@ const Posts = ()=>{
                 <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
                     <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
                         <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+                        <span className="text-gray-200 text-xs" >{post.updatedAt}</span>
                             <div className="text-2xl font-bold text-900">{post.title}</div>
                             <div className="flex align-items-center gap-3">
                                 <span className="flex align-items-center gap-2">
-                                    <i className="pi pi-user"></i>
-                                    <span className="font-semibold">{user.body}</span>
+                                    <span className="font-semibold">{post.body}</span>
                                 </span>
                             </div>
                         </div>
-                        <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => { deletePost(post._id) }}></Button>
-                            <Button icon="pi pi-pen-to-square" className="p-button-rounded" onClick={() => {
+                        <div className="flex sm:flex-rows align-items-center sm:align-items-end gap-3 sm:gap-2">
+                            <Button icon="pi pi-trash" raised rounded severity="danger" onClick={() => { deletePost(post._id) }}></Button>
+                            <Button icon="pi pi-pen-to-square" raised rounded onClick={() => {
                             setBlocked(true)
                             setIsCreating(false)
                             setCurrentPost(post)
@@ -68,21 +71,20 @@ const Posts = ()=>{
 
     const gridItem = (post) => {
         return (
-            <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={user._id}>
+            <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={post._id}>
                 <div className="p-4 border-1 surface-border surface-card border-round">
-                    
+                <span className="text-gray-200 text-xs" >{post.updatedAt}</span>
                     <div className="flex flex-column align-items-center gap-3 py-5">
-                        <div className="text-2xl font-bold">{user.title}</div>
+                        <div className="text-2xl font-bold">{post.title}</div>
                     </div>
                     <div className="flex flex-wrap align-items-center justify-content-between gap-2">
                         <div className="flex align-items-center gap-2">
-                            <i className="pi pi-user"></i>
                             <span className="font-semibold">{post.body}</span>
                         </div>
                     </div>
                     <div className="flex align-items-end ">
-                        <Button icon="pi pi-trash" className="p-button-rounded" severity="danger" onClick={() => deletePost(post._id)} style={{ marginRight: '0.5rem' }}></Button>
-                        <Button icon="pi pi-pen-to-square" className="p-button-rounded" onClick={() => {
+                        <Button icon="pi pi-trash" raised rounded severity="danger" onClick={() => deletePost(post._id)} style={{ marginRight: '0.5rem' }}></Button>
+                        <Button icon="pi pi-pen-to-square" raised rounded onClick={() => {
                             setBlocked(true)
                             setIsCreating(false)
                             setCurrentPost(post)
@@ -115,7 +117,7 @@ const Posts = ()=>{
                         <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
                     </span>
                     <span>
-                        <Button icon='pi pi-user-plus' onClick={() => {
+                        <Button raised icon='pi pi-plus' onClick={() => {
                             setBlocked(true)
                             setIsCreating(true)
                         }}></Button>
@@ -128,9 +130,12 @@ const Posts = ()=>{
 
     
     return(
+
         <BlockUI blocked={blocked} template={
+            <>
                 {isCreating ? <AddPost setBlocked={setBlocked}/> : 
                 <UpdatePost setBlocked={setBlocked} currentPost={currentPost}/>}
+            </>
         }>
             <div className="card">
                 <DataView value={postsList} listTemplate={listTemplate} layout={layout} header={header()} />

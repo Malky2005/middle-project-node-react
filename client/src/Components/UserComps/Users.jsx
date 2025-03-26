@@ -9,7 +9,7 @@ import Updateuser from './Updateuser';
 
 const Users = () => {
     const [usersList, setUsersList] = useState([])
-    const [layout, setLayout] = useState('grid')
+    const [layout, setLayout] = useState('list')
     const [blocked, setBlocked] = useState(false)
     const [isCreating, setIsCreating] = useState(true);
     const [currentUser, setCurrentUser] = useState({});

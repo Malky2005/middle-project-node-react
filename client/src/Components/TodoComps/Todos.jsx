@@ -9,7 +9,7 @@ import UpdateTodo from './UpdateTodo';
 
 const Todos = ()=>{
     const [todosList, setTodosList] = useState([])
-    const [layout, setLayout] = useState('grid')
+    const [layout, setLayout] = useState('list')
     const [blocked, setBlocked] = useState(false)
     const [isCreating, setIsCreating] = useState(true);
     const [currentTodo, setCurrentTodo] = useState({});

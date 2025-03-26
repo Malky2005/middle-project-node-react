@@ -9,7 +9,7 @@ import UpdatePost from './UpdatePost';
 
 const Posts = ()=>{
     const [postsList, setPostsList] = useState([])
-    const [layout, setLayout] = useState('grid')
+    const [layout, setLayout] = useState('list')
     const [blocked, setBlocked] = useState(false)
     const [isCreating, setIsCreating] = useState(true);
     const [currentPost, setCurrentPost] = useState({});

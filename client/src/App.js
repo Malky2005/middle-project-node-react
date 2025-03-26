@@ -7,9 +7,9 @@ import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 import Menu from './Components/Menu';
 import { Route, Routes } from 'react-router-dom'
-import Todos from './Components/Todos'
-import Posts from './Components/Posts'
-import Users from './Components/Users'
+import Todos from './Components/TodoComps/Todos'
+import Posts from './Components/PostComps/Posts'
+import Users from './Components/UserComps/Users'
 import Home from './Components/Home'
 
 

@@ -6,7 +6,6 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { classNames } from 'primereact/utils';
-import { InputTextarea } from 'primereact/inputtextarea';
 
 const UpdateTodo = (props) => {
     const { setBlocked, currentTodo } = props

@@ -4,8 +4,6 @@ import { Button } from 'primereact/button';
 import { BlockUI } from 'primereact/blockui';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { classNames } from 'primereact/utils';
-import AddPost from './AddPost';
-import UpdatePost from './UpdatePost';
 import AddTodo from './AddTodo';
 import UpdateTodo from './UpdateTodo';
 

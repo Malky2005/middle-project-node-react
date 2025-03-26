@@ -1,5 +1,5 @@
 import { Card } from 'primereact/card';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useForm, Controller } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';

@@ -16,7 +16,8 @@ const getUserById = async (req,res)=>{
 
 const addNewUser = async (req,res)=>{
     const { name, username, email, phone, street, city, building } = req.body;
-    const address = {street,city,building:Number(building)}
+    const buildingNum = building? Number(building) : undefined
+    const address = {street,city,building:buildingNum}
     if(!name || !username){
         return res.status(400).send('name and username are required')
     }
